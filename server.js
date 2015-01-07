@@ -83,8 +83,28 @@ router.route('/directors/:director_id')
       }
       res.json(director);
     });
+  })
+  // update the director with that id
+  .put(function(req, res){
+    Director.findById(req.params.director_id, function(err, director){
+      if (err) {
+        res.send(err);
+      }
+      //update info
+      director.favorite_camera = req.body.favorite_camera;
+      director.favorite_movies = req.body.favorite_movies;
+
+      //save director
+      director.save(function(err){
+        if (err) {
+          res.send(err);
+        }
+        res.json({ message: 'Director updated!'});
+      });
+
+    });
   });
-  
+
 // REGISTER ROUTES
 // all of our routes will be prefixed with /api
 app.use('/api', router);
@@ -93,4 +113,4 @@ app.use('/api', router);
 // ==========================================================
 
 app.listen(port);
-console.log('Magic happends on port ' + port);
+console.log('Magic happens on port ' + port);
