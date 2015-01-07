@@ -103,6 +103,17 @@ router.route('/directors/:director_id')
       });
 
     });
+  })
+
+  .delete(function(req, res){
+    Director.remove({
+      _id: req.params.director_id
+    }, function(err, director){
+      if (err) {
+        res.send(err);
+      }
+      res.json({ message: 'Successfully deleted' });
+    });
   });
 
 // REGISTER ROUTES
