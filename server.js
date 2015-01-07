@@ -5,6 +5,8 @@
 var express    = require('express');
 var app        = express();
 var bodyParser = require('body-parser');
+var https      = require('https');
+var concatStream     = require('concat-stream');
 
 // configure app to use bodyParser()
 
@@ -44,20 +46,38 @@ router.get('/', function(req, res){
 router.route('/directors')
   // create a director
   .post(function(req, res){
+    var livestreamUrl = "https://api.new.livestream.com/accounts/" + req.body.livestream_id;
 
-    var director = new Director();
-    director.livestream_id = req.body.livestream_id;
-    director.full_name = req.body.full_name;
-    director.dob = req.body.dob;
-    director.favorite_camera = req.body.favorite_camera;
-    director.favorite_movies = req.body.favorite_movies;
-
-    director.save(function(err) {
-      if (err) {
-        res.send(err);
+    https.get(livestreamUrl, function(httpsResponse){
+      if (httpsResponse.statusCode === 404) {
+        return httpsResponse.pipe(res.status(404));
       }
-      res.json({ message: 'Director created!' });
+      httpsResponse.setEncoding('utf8');
+      httpsResponse.pipe(concatStream(function(data){
+        var directorInfo = JSON.parse(data);
+        var director = new Director();
+        director.livestream_id = req.body.livestream_id;
+        director.full_name = directorInfo.full_name;
+        director.dob = directorInfo.dob;
+        director.favorite_camera = directorInfo.favorite_camera || "";
+        director.favorite_movies = directorInfo.favorite_movies || [];
+
+        director.save(function(err) {
+          if (err) {
+            res.status(404).send(err);
+          }
+          res.json({
+            livestream_id: director.livestream_id,
+            full_name: director.full_name,
+            dob: director.dob,
+            favorite_camera: director.favorite_camera,
+            favorite_movies: director.favorite_movies
+          });
+        });
+      }));
     });
+
+
 
   })
 
