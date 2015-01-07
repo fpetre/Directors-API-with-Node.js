@@ -57,6 +57,17 @@ router.route('/directors')
       res.json({ message: 'Director created!' });
     });
 
+  })
+
+  // get all directors
+  .get(function(req, res) {
+    Director.find(function(err, directors){
+      if (err) {
+        res.send(err);
+      }
+
+      res.json(directors);
+    });
   });
 
 
