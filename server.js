@@ -46,6 +46,7 @@ router.route('/directors')
   .post(function(req, res){
 
     var director = new Director();
+    director.livestream_id = req.body.livestream_id;
     director.full_name = req.body.full_name;
     director.dob = req.body.dob;
     director.favorite_camera = req.body.favorite_camera;
