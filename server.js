@@ -38,8 +38,9 @@ router.get('/', function(req, res){
 });
 
 // more routes for our API will happen here
-//routes that end in /bears
 
+// routes that end in /directors
+// -----------------------------------------------------------
 router.route('/directors')
   // create a director
   .post(function(req, res){
@@ -70,8 +71,20 @@ router.route('/directors')
     });
   });
 
+// routes that end in /directors/:director_id
+// -----------------------------------------------------------
+router.route('/directors/:director_id')
 
-
+  // get director with that id
+  .get(function(req, res){
+    Director.findById(req.params.director_id, function(err, director) {
+      if (err) {
+        res.send(err);
+      }
+      res.json(director);
+    });
+  });
+  
 // REGISTER ROUTES
 // all of our routes will be prefixed with /api
 app.use('/api', router);
