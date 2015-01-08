@@ -47,38 +47,47 @@ router.route('/directors')
   // create a director
   .post(function(req, res){
     var livestreamUrl = "https://api.new.livestream.com/accounts/" + req.body.livestream_id;
+    
 
     https.get(livestreamUrl, function(httpsResponse){
+      httpsResponse.setEncoding('utf8');
+      
+      // if livestream id invalid send livestream API error message
       if (httpsResponse.statusCode === 404) {
         return httpsResponse.pipe(res.status(404));
-      }
-      httpsResponse.setEncoding('utf8');
-      httpsResponse.pipe(concatStream(function(data){
-        var directorInfo = JSON.parse(data);
-        var director = new Director();
-        director.livestream_id = req.body.livestream_id;
-        director.full_name = directorInfo.full_name;
-        director.dob = directorInfo.dob;
-        director.favorite_camera = directorInfo.favorite_camera || "";
-        director.favorite_movies = directorInfo.favorite_movies || [];
+      } 
+      //only create director one with same livestream id doesnt already exist
+      Director.find({"livestream_id": req.body.livestream_id}, function(err, directors){
+        if (err) {
+          res.status(404).send(err);
+        }else if (directors.length !== 0) {
+          return res.status(404).send({message: "livestream_id is already registered"});
+        } else {
+          httpsResponse.pipe(concatStream(function(data){
+            var directorInfo = JSON.parse(data);
+            var director = new Director();
+            director.livestream_id = req.body.livestream_id;
+            director.full_name = directorInfo.full_name;
+            director.dob = directorInfo.dob;
+            director.favorite_camera = directorInfo.favorite_camera || "";
+            director.favorite_movies = directorInfo.favorite_movies || [];
 
-        director.save(function(err) {
-          if (err) {
-            res.status(404).send(err);
-          }
-          res.json({
-            livestream_id: director.livestream_id,
-            full_name: director.full_name,
-            dob: director.dob,
-            favorite_camera: director.favorite_camera,
-            favorite_movies: director.favorite_movies
-          });
-        });
-      }));
+            director.save(function(err) {
+              if (err) {
+                res.status(404).send(err);
+              }
+              res.json({
+                livestream_id: director.livestream_id,
+                full_name: director.full_name,
+                dob: director.dob,
+                favorite_camera: director.favorite_camera,
+                favorite_movies: director.favorite_movies
+              });
+            });
+          }));
+        }
+      }); 
     });
-
-
-
   })
 
   // get all directors
