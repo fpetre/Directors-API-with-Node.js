@@ -29,13 +29,6 @@ var port = process.env.PORT || 3000;
 
 var router = express.Router();
 
-// midleware for all requests
-router.use(function(req, res, next) {
-  // log request
-  console.log('Something is happening.');
-  next();
-});
-
 
 // routes that end in /directors
 // -----------------------------------------------------------

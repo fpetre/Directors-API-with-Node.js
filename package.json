@@ -2,9 +2,15 @@
   "name": "director-api",
   "main": "server.js",
   "dependencies": {
+    "mocha": "~2.1.0",
+    "should": ">= 0.0.1",
+    "supertest": "~0.15.0",
     "express": "~4.0.0",
     "mongoose": "~3.6.13",
     "body-parser": "~1.0.1",
     "concat-stream": "~1.4.7"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
