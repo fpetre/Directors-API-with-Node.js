@@ -69,14 +69,28 @@ describe('directors API', function(){
       .expect(404)
       .end(function(e, res){
         expect(e).toBe(null);
-        expect(res.status).toBe(404);
         expect(res.text).toBe("{\"name\":\"NotFoundError\",\"message\":\"Object account:1234214324 does not have an id.\"}")
         done();
       });
     });
 
-    it('does not register a director twice');
-
+    it('does not register a director twice', function(done){
+      request(app)
+      .post('/directors')
+      .send({ 'livestream_id': '6488834' })
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(e, res){
+        request(app)
+        .post('/directors')
+        .send({ 'livestream_id': '6488834' })
+        .expect(404)
+        .end(function(e, res){
+          expect(res.error.text).toBe('{"message":"livestream_id is already registered"}');
+          done();
+        });
+      });
+    });
   });
 
   describe('get to /directors', function(){
@@ -218,7 +232,6 @@ describe('directors API', function(){
         .expect(401)
         .end(function(e, res){
           expect(e).toBe(null);
-          expect(res.status).toBe(401);
           expect(res.text).toBe('missing authorization header');
           done();
         });
@@ -235,7 +248,6 @@ describe('directors API', function(){
         .expect(401)
         .end(function(e, res){
           expect(e).toBe(null);
-          expect(res.status).toBe(401);
           expect(res.text).toBe('invalid authorization header');
           done();
         });
