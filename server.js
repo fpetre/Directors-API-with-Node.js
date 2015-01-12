@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 // configure mongoose to use monogDB modulus database
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://directorApi:directorApi@proximus.modulusmongo.net:27017/Pyzote2t')
+mongoose.connect('mongodb://directorApi:directorApi@proximus.modulusmongo.net:27017/Pyzote2t');
 
 // models
 var Director   = require('./app/models/director');
@@ -164,3 +164,5 @@ app.use('/', router);
 // ==========================================================
 
 app.listen(port);
+
+module.exports = app;
