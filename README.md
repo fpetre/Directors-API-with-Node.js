@@ -1,7 +1,7 @@
 # Directors-API-with-Node.js
 A simple API that registers and lists all the movie directors having an account on Livestream (like James Cameron, Martin Scorsese, etc.).
 
-To register a director:
+TO REGISTER A DIRECTOR:
 
 send a POST request to api_url/directors with livestream account id as a parameter
 
@@ -22,7 +22,7 @@ Response:
 }
 
 
-To get a list of registered directors:
+TO GET A LIST OF REGISTERED DIRECTORS:
 
 send a GET request to api_url/directors
 
@@ -52,7 +52,7 @@ Response:
   ]
 
 
-To get one director by id:
+TO GET ONE DIRECTOR BY ID:
 
 send a GET request to api_url/directors/director_id
 
@@ -71,7 +71,8 @@ Response:
 }
 
 
-To update a director:
+
+TO UPDATE A DIRECTOR:
 
 send a PUT request to api_url/directors/director_id with an md5 hash of the full_name
 
@@ -99,7 +100,7 @@ Response:
 }
 
 
-To delete a director:
+TO DELETE A DIRECTOR:
 
 send a DELETE request to api_url/directors/director_id
 
