@@ -31,7 +31,7 @@ describe('directors API', function(){
       });
     });
 
-    it('creates a director', function(done){
+    it('registers a director', function(done){
       request(app)
       .post('/directors')
       .send({ 'livestream_id': '6488834' })
@@ -74,6 +74,8 @@ describe('directors API', function(){
         done();
       });
     });
+
+    it('does not register a director twice');
 
   });
 
